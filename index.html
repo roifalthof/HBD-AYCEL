@@ -6,7 +6,6 @@
 
 <title>Happy Birthday Aycel</title>
 
-<!-- FONT -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -26,9 +25,10 @@ body{
     justify-content:center;
     align-items:center;
     position:relative;
+    padding:20px;
 }
 
-/* GLOW BACKGROUND */
+/* GLOW */
 body::before{
     content:"";
     position:absolute;
@@ -47,6 +47,7 @@ body::before{
     animation:fall linear forwards;
     opacity:0.8;
     z-index:1;
+    pointer-events:none;
 }
 
 @keyframes fall{
@@ -142,20 +143,23 @@ body::before{
 /* POPUP */
 .popup{
     position:fixed;
-    width:90%;
-    max-width:850px;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%) scale(0);
+    width:min(92%,850px);
+    max-height:90vh;
+    overflow-y:auto;
     background:rgba(255,255,255,0.96);
     backdrop-filter:blur(12px);
     border-radius:28px;
     padding:35px;
     box-shadow:0 20px 60px rgba(0,0,0,0.25);
-    transform:scale(0);
     transition:0.45s ease;
     z-index:100;
 }
 
 .popup.show{
-    transform:scale(1);
+    transform:translate(-50%,-50%) scale(1);
 }
 
 /* CLOSE */
@@ -200,6 +204,22 @@ body::before{
     color:#555;
     line-height:1.9;
     font-weight:400;
+    min-height:180px;
+    white-space:pre-line;
+}
+
+/* TYPE CURSOR */
+.typing::after{
+    content:"|";
+    animation:blink 0.7s infinite;
+    color:#ff4f9f;
+    margin-left:2px;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
 }
 
 /* IMAGE */
@@ -228,8 +248,13 @@ body::before{
 /* MOBILE */
 @media(max-width:768px){
 
+    body{
+        padding:20px;
+        overflow:hidden;
+    }
+
     .text-top{
-        font-size:38px;
+        font-size:34px;
     }
 
     .mail{
@@ -238,9 +263,9 @@ body::before{
     }
 
     .popup{
-        padding:25px;
-        max-height:90vh;
-        overflow-y:auto;
+        width:95%;
+        padding:22px;
+        border-radius:22px;
     }
 
     .title-row{
@@ -249,7 +274,7 @@ body::before{
     }
 
     .text-section h1{
-        font-size:34px;
+        font-size:32px;
     }
 
     .popup-img{
@@ -258,7 +283,15 @@ body::before{
     }
 
     .text-section p{
-        font-size:14px;
+        font-size:15px;
+        line-height:1.8;
+        min-height:220px;
+    }
+
+    .close{
+        font-size:30px;
+        top:10px;
+        right:18px;
     }
 }
 
@@ -312,19 +345,12 @@ body::before{
                     Selamat Ulang Tahun Aycel
                 </h1>
 
-                <!-- GANTI DENGAN FOTO KAMU -->
+                <!-- GANTI DENGAN FOTO -->
                 <img src="aycel.png" class="popup-img">
 
             </div>
 
-            <p>
-                Aku berharap semua hal baik datang kepadamu:
-                kebahagiaan, kesehatan, mimpi yang tercapai,
-                dan hati yang selalu dipenuhi cinta.
-                Dan semoga, di setiap langkah hidupmu nanti,
-                banyak orang yang berdiri di sampingmu,
-                happy  birthday ya aycellll .
-            </p>
+            <p id="typingText"></p>
 
         </div>
 
@@ -339,6 +365,14 @@ const popup = document.getElementById("popup");
 const openBtn = document.getElementById("openBtn");
 const closeBtn = document.getElementById("closeBtn");
 const music = document.getElementById("bgmusic");
+const typingText = document.getElementById("typingText");
+
+const message = `Aku berharap semua hal baik datang kepadamu:
+kebahagiaan, kesehatan, mimpi yang tercapai,
+dan hati yang selalu dipenuhi cinta.
+Dan semoga, di setiap langkah hidupmu nanti,
+banyak orang yang berdiri di sampingmu,
+happy birthday ya aycellll .`;
 
 /* OPEN */
 openBtn.addEventListener("click", () => {
@@ -348,7 +382,33 @@ openBtn.addEventListener("click", () => {
     music.play();
 
     setTimeout(() => {
+
         popup.classList.add("show");
+
+        typingText.innerHTML = "";
+        typingText.classList.add("typing");
+
+        let i = 0;
+
+        function typeWriter(){
+
+            if(i < message.length){
+
+                typingText.innerHTML += message.charAt(i);
+
+                i++;
+
+                setTimeout(typeWriter,35);
+
+            }else{
+
+                typingText.classList.remove("typing");
+
+            }
+        }
+
+        typeWriter();
+
     }, 700);
 
 });
